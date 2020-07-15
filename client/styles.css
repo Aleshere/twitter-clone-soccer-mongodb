@@ -1,0 +1,25 @@
+h3 {
+    margin-top: 4rem !important;
+}
+
+.title {
+    text-align: center;
+}
+
+.mew-form {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mews {
+    width: 80%;
+    margin: 0 auto;
+    background-color: cornsilk;
+    padding: 5px;
+}
