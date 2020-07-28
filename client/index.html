@@ -6,7 +6,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <meta name='apple-mobile-web-app-capable' content='yes' />
     <meta name='apple-mobile-web-app-status-bar-style' content='black' />
-    <title>Soccer Tweets</title>
+    <title>Twitter Clone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -14,7 +14,7 @@
 <body>
 
     <header>
-        <h1 class="title">Twitter For Soccer Lovers</h1>
+        <h1 class="title">Twitter For Beginners</h1>
     </header>
 
     <main>
@@ -25,11 +25,15 @@
             <textarea class='u-full-width' type="text" name="content" id="content"></textarea>
             <button class="button-primary" >Send Your Tweet</button>
         </form>
-        <div class="loading">
-            <img src="loading.gif" alt="loading">
-        </div>
         <div class="mews">
             
+        </div>
+        <div class="button-container">
+            <!-- <button id='loadMoreButton' class="button-primary" style='visibility: hidden;'>Load More Tweets</button> -->
+            <p id='loadMore'>Loading...</p>
+        </div>
+        <div class="loading">
+            <img src="loading.gif" alt="loading">
         </div>
     </main>
     

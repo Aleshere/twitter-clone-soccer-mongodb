@@ -23,3 +23,14 @@ h3 {
     background-color: cornsilk;
     padding: 5px;
 }
+
+.mews > div {
+    padding: 1rem;
+    border: 4px solid white;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin: 1em;
+}

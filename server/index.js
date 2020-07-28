@@ -21,14 +21,42 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/mews', (req, res) => {
-    mews.find().then(mews => {
-        res.json(mews)
-    });
+app.get('/mews', (req, res, next) => {
+    // let skip = Number(req.query.skip) || 0;
+    // let limit = Number(req.query.limit) || 10;
+    let { skip = 0, limit = 5, sort = 'desc' } = req.query;
+    skip = parseInt(skip) || 0;
+    limit = parseInt(limit) || 5;
+
+    Promise.all([
+        mews
+            .count(),
+        mews
+        .find({}, {
+            skip,
+            limit,
+            sort: {
+                created: sort === 'desc' ? -1 : 1
+            }
+        })
+    ])
+
+    .then(([ total, mews ]) => {
+        res.json({
+            mews,
+            meta: {
+                total,
+                skip,
+                limit,
+                has_more: total - (skip + limit) > 0
+            }
+        });
+    }).catch(next);
 }); 
 
 function isValidMew(mew) {
-    return mew.name && mew.name.toString().trim() !== '' && mew.content && mew.content.toString().trim() !== '';
+    return mew.name && mew.name.toString().trim() !== '' && mew.name.toString().trim().length <= 50
+    && mew.content && mew.content.toString().trim() !== '' && mew.content.toString().trim().length <= 140;
 }
 
 app.use(rateLimit({

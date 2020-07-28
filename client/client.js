@@ -1,9 +1,23 @@
 const form = document.querySelector('form');
 const loadingElement = document.querySelector('.loading');
 const mewsElement = document.querySelector('.mews');
+const loadMoreElement = document.querySelector('#loadMore');
 const API_URL = 'http://localhost:5000/mews';
 
+let skip = 0;
+let limit = 5;
+let loading = false;
+let finished = false;
+
 loadingElement.style.display = '';
+
+document.addEventListener('scroll', () => {
+    const rect = loadMoreElement.getBoundingClientRect();
+    if(rect.top < window.innerHeight && !loading && !finished){
+        loadMore();
+    }
+})
+
 listAllMews();
 
 form.addEventListener('submit', (event) => {
@@ -36,14 +50,24 @@ form.addEventListener('submit', (event) => {
         });
 });
 
-function listAllMews() {
-    mewsElement.innerHTML = '';
+function loadMore() {
+    skip += limit;
+    listAllMews(false);
+}
 
-    fetch(API_URL)
+function listAllMews(reset = true) {
+    loading = true;
+    if(reset){
+        mewsElement.innerHTML = '';
+        skip = 0;
+        finished = false;
+    }
+
+
+    fetch(`${API_URL}?skip=${skip}&limit=${limit}`)
         .then(response => response.json())
-            .then(mews => {
-                mews.reverse();
-                mews.forEach(mew => {
+            .then(result => {
+                result.mews.forEach(mew => {
                     const div = document.createElement('div');
 
                     const header = document.createElement('h3');
@@ -63,5 +87,12 @@ function listAllMews() {
                 });
                 loadingElement.style.display = 'none';
 
+                if(!result.meta.has_more){
+                    loadMoreElement.style.visibility = 'hidden';
+                    finished = true;
+                } else {
+                    loadMoreElement.style.visibility = 'visible';
+                }
+                loading = false;
         });
 }
