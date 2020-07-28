@@ -2,7 +2,8 @@ const form = document.querySelector('form');
 const loadingElement = document.querySelector('.loading');
 const mewsElement = document.querySelector('.mews');
 const loadMoreElement = document.querySelector('#loadMore');
-const API_URL = 'http://localhost:5000/mews';
+const API_URL = window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/mews' : 'https://twitter-clone-six.vercel.app/';
+
 
 let skip = 0;
 let limit = 5;
@@ -21,33 +22,52 @@ document.addEventListener('scroll', () => {
 listAllMews();
 
 form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = new FormData(form);
-    const name = formData.get('name');
-    const content = formData.get('content');
+  event.preventDefault();
+  const formData = new FormData(form);
+  const name = formData.get('name');
+  const content = formData.get('content');
 
-    const mew = {
-        name,
-        content
-    }
-
+  if (name.trim() && content.trim()) {
+    errorElement.style.display = 'none';
     form.style.display = 'none';
     loadingElement.style.display = '';
 
+    const mew = {
+      name,
+      content
+    };
+    
     fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify(mew),
-        headers: {
-            'content-type': 'application/json'
+      method: 'POST',
+      body: JSON.stringify(mew),
+      headers: {
+        'content-type': 'application/json'
+      }
+    }).then(response => {      
+      if (!response.ok) {
+        const contentType = response.headers.get('content-type');
+        if (contentType.includes('json')) {
+          return response.json().then(error => Promise.reject(error.message));
+        } else {
+          return response.text().then(message => Promise.reject(message));
         }
-    }).then(response => response.json())
-        .then(createdMew => {
-            form.reset();
-            setTimeout(() => {
-                form.style.display = '';
-            }, 3000);
-            listAllMews();
-        });
+      }
+    }).then(() => {
+      form.reset();
+      setTimeout(() => {
+        form.style.display = '';
+      }, 30000);
+      listAllMews();
+    }).catch(errorMessage => {
+      form.style.display = '';
+      errorElement.textContent = errorMessage;
+      errorElement.style.display = '';
+      loadingElement.style.display = 'none';
+    });
+  } else {
+    errorElement.textContent = 'Name and content are required!';
+    errorElement.style.display = '';
+  }
 });
 
 function loadMore() {
