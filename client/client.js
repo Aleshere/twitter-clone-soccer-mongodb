@@ -1,8 +1,11 @@
 const form = document.querySelector('form');
+const errorElement = document.querySelector('.error-message');
 const loadingElement = document.querySelector('.loading');
 const mewsElement = document.querySelector('.mews');
 const loadMoreElement = document.querySelector('#loadMore');
-const API_URL = window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/mews' : 'https://my-mongodb-api-sable.vercel.app/mews';
+// const API_URL = window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/mews' : 'https://my-mongodb-api-sable.vercel.app/mews';
+//const API_URL = 'http://localhost:5000/mews';
+const API_URL = 'https://my-mongodb-api-sable.vercel.app/mews';
 
 
 let skip = 0;
@@ -11,6 +14,7 @@ let loading = false;
 let finished = false;
 
 loadingElement.style.display = '';
+//errorElement.style.display = 'none';
 
 document.addEventListener('scroll', () => {
     const rect = loadMoreElement.getBoundingClientRect();
@@ -28,7 +32,7 @@ form.addEventListener('submit', (event) => {
   const content = formData.get('content');
 
   if (name.trim() && content.trim()) {
-    errorElement.style.display = 'none';
+    //errorElement.style.display = 'none';
     form.style.display = 'none';
     loadingElement.style.display = '';
 

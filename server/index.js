@@ -7,9 +7,10 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 
 const db = monk(process.env.MONGO_URI || 'localhost/meower');
-const mews = db.get('mews');
+const mews = db.get('Tweets');
 const filter = new Filter();
 
+app.enable('trust proxy');
 
 app.use(cors());
 app.use(express.json());
@@ -21,9 +22,11 @@ app.get('/', (req, res) => {
     });
 });
 
+
 app.get('/mews', (req, res, next) => {
     // let skip = Number(req.query.skip) || 0;
     // let limit = Number(req.query.limit) || 10;
+    res.header('Access-Control-Allow-Origin', '*');
     let { skip = 0, limit = 5, sort = 'desc' } = req.query;
     skip = parseInt(skip) || 0;
     limit = parseInt(limit) || 5;
@@ -86,7 +89,6 @@ const createMew = (req, res, next) => {
   };
   
   app.post('/mews', createMew);
-  app.post('/v2/mews', createMew);
   
   app.use((error, req, res, next) => {
     res.status(500);
@@ -95,6 +97,6 @@ const createMew = (req, res, next) => {
     });
   });
   
-  app.listen(5000, () => {
+  app.listen(db, () => {
     console.log('Listening on http://localhost:5000');
   });

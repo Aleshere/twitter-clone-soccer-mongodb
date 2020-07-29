@@ -6,6 +6,13 @@ h3 {
     text-align: center;
 }
 
+.error-message {
+    background: #ff9b9b;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
 .mew-form {
     width: 50%;
     margin: 0 auto;
@@ -27,6 +34,14 @@ h3 {
 .mews > div {
     padding: 1rem;
     border: 4px solid white;
+}
+
+.mews > div > h3 {
+    word-wrap: break-word;
+}
+
+.mews > div > p {
+    word-wrap: break-word;
 }
 
 .button-container {
