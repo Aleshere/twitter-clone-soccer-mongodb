@@ -64,29 +64,37 @@ app.use(rateLimit({
     max: 5 // limit each IP to 100 requests per windowMs
 }));
 
-app.post('/mews', (req, res) => {
+const createMew = (req, res, next) => {
     if (isValidMew(req.body)) {
-        // insert into db
-        const mew = {
-            name: filter.clean(req.body.name.toString()),
-            content: filter.clean(req.body.content.toString()),
-            created: new Date()
-        };
-
-        mews.insert(mew).then(createdMew => {
-            res.json(createdMew);
-        })
-        
+      const mew = {
+        name: filter.clean(req.body.name.toString().trim()),
+        content: filter.clean(req.body.content.toString().trim()),
+        created: new Date()
+      };
+  
+      mews
+        .insert(mew)
+        .then(createdMew => {
+          res.json(createdMew);
+        }).catch(next);
     } else {
-        res.status(422);
-        res.json({
-            message: 'Hey! Name and Content are Required!'
-        });
+      res.status(422);
+      res.json({
+        message: 'Hey! Name and Content are required! Name cannot be longer than 50 characters. Content cannot be longer than 140 characters.'
+      });
     }
-});
-
-
-app.listen(5000, () => {
+  };
+  
+  app.post('/mews', createMew);
+  app.post('/v2/mews', createMew);
+  
+  app.use((error, req, res, next) => {
+    res.status(500);
+    res.json({
+      message: error.message
+    });
+  });
+  
+  app.listen(5000, () => {
     console.log('Listening on http://localhost:5000');
-    
-});
+  });

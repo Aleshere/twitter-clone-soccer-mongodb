@@ -2,7 +2,7 @@ const form = document.querySelector('form');
 const loadingElement = document.querySelector('.loading');
 const mewsElement = document.querySelector('.mews');
 const loadMoreElement = document.querySelector('#loadMore');
-const API_URL = window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/mews' : 'https://twitter-clone-six.vercel.app/';
+const API_URL = window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/mews' : 'https://my-mongodb-api-sable.vercel.app/mews';
 
 
 let skip = 0;
